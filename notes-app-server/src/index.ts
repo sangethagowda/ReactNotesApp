@@ -1,13 +1,17 @@
 import express from "express";
 import cors from "cors";
+import { PrismaClient } from "@prisma/client";
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
+const prisma = new PrismaClient();
+
 app.get("/api/notes",async(req,res)=>{
-    res.json({message:"sucess!"})
+   const result= await prisma.note.findMany()
+    res.json(result);
 })
 
 app.listen(5000,()=>{

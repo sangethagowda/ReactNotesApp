@@ -14,6 +14,38 @@ app.get("/api/notes",async(req,res)=>{
     res.json(result);
 })
 
+app.post("/api/notes",async(req,res)=>{
+    const {title,content,id} = req.body;
+
+    if(!title || !content || !id)
+        return res.status(400).send("invalid object")
+
+    try {
+        const note = await prisma.note.create({
+            data:{title,content,id}
+        })
+        res.json(note) 
+    } catch (error) {
+        res.status(500).send("Opps something went wrong!!!")
+    }
+})
+
+app.post("/api/post/:id",async(req,res)=>{
+    const {title,content} = req.body;
+    const{id} = req.body.id
+
+    id(!id)
+    {
+        res.status(400).send("please provide ID");
+    }
+    try {
+        const updatedNote =await prisma.note.update({where:{id},data:{title,content}})
+        res.json(updatedNote)
+    } catch (error) {
+        res.status(500).send("Opps something went wrong!!!")
+    }
+})
+
 app.listen(5000,()=>{
     console.log("app running in 5000");
 })

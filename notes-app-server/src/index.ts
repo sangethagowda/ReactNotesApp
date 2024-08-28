@@ -46,6 +46,29 @@ app.post("/api/post/:id",async(req,res)=>{
     }
 })
 
+app.put("/api/notes/:id",async(req,res)=>{
+    const {title,content} = req.body;
+    const id= parseInt(req.params.id)
+    try {
+        const updatedNote =await prisma.note.update({where:{id},data:{title,content}})
+        res.json(updatedNote)
+    } catch (error) {
+        console.log(id)
+        res.status(500).send("Opps something went wrong!!!")
+    }
+})
+
+app.delete("/api/notes/:id",async(req,res)=>{
+    const id= parseInt(req.params.id)
+    try {
+        const updatedNote =await prisma.note.delete({where:{id}})
+        res.json(updatedNote)
+    } catch (error) {
+        console.log(id)
+        res.status(500).send("Opps something went wrong!!!")
+    }
+})
+
 app.listen(5000,()=>{
     console.log("app running in 5000");
 })

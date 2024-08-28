@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { title } from 'process';
-import { mockNoteData } from './Constants/constant';
 import { Note } from './interface/projectInterface';
 
 function App() {
-  const [notes,setNotes] =useState<Note[]>(mockNoteData);
+  const [notes,setNotes] =useState<Note[]>([]);
   const [title,setTitle] = useState('');
   const [content,setContent] = useState('');
   const [selectedNote,setSelectedNote]=useState<Note | null>(null);
+
+  useEffect(()=>{
+      const fetchNotes = async()=>{
+        try {
+        let response = await fetch('http://localhost:5000/api/notes')
+        const notes:Note[]=await response.json();
+        setNotes(notes)
+        } catch (error) {
+          console.log(error)
+        }  
+      }
+    fetchNotes();
+  },[])
 
  const handleNoteClick=(note:Note)=>{
   setTitle(note.title);
@@ -17,16 +28,23 @@ function App() {
   setSelectedNote(note);
  }
   
-  const handleAddNote=(event:React.FormEvent)=>{
+  const handleAddNote=async(event:React.FormEvent)=>{
     event.preventDefault();
-    const newNote:Note={
-      id: notes.length,
-      title: title,
-      content: content
-    };
-    setNotes([newNote,...notes]);
-    setTitle('');
-    setContent('');
+      try {
+      const response = await fetch('http://localhost:5000/api/notes',{
+        method:'POST',
+        body:JSON.stringify({title,content,id:notes.length}),
+        headers:{
+          "Content-Type":'application/json'
+        }
+      })
+      const newNote = await response.json()
+      setNotes([newNote,...notes]);
+      setTitle('');
+      setContent('');
+      } catch (error) {
+        console.log(error)
+      }  
   }
 
   const handleUpdateNote=(event:React.FormEvent)=>{

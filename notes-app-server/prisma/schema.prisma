@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Note{
-  id String @id @map("_id")
+  id Int @id @map("_id")
   title String
   content String
 }

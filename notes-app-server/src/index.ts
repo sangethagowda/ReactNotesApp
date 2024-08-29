@@ -34,7 +34,7 @@ app.post("/api/post/:id",async(req,res)=>{
     const {title,content} = req.body;
     const{id} = req.body.id
 
-    id(!id)
+    if(!id)
     {
         res.status(400).send("please provide ID");
     }

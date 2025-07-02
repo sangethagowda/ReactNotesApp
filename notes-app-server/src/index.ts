@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 
+const http = require('http');
 const app = express();
 
 app.use(express.json());
@@ -69,6 +70,12 @@ app.delete("/api/notes/:id",async(req,res)=>{
     }
 })
 
-app.listen(5000,()=>{
+const port = process.env.
+const server = http.createServer((req:any,res:any)=>{
+res.writeHead(200,{'Content-Type':'text/pain'});
+res.end('hello!, server is running');
+})
+
+server.listen(port,()=>{
     console.log("app running in 5000");
 })
